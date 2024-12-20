@@ -5,6 +5,7 @@
 """
 
 import textstat
+import pytest
 
 short_test = "Cool dogs wear da sunglasses."
 
@@ -299,41 +300,23 @@ def test_avg_sentence_per_word():
     assert avg == 0.05
 
 
-def test_flesch_reading_ease():
-    textstat.set_lang("en_US")
-    score = textstat.flesch_reading_ease(long_test)
+@pytest.mark.parametrize(
+    "lang,text,ease",
+    [
+        ("en_US", long_test, 66.17),
+        ("de_DE", long_test, 64.5),
+        ("es_ES", long_test, 88.5),
+        ("fr_FR", long_test, 81.73),
+        ("it_IT", long_test, 92.53),
+        ("nl_NL", long_test, 63.27),
+        ("ru_RU", long_test, 118.27),
+    ]
+)
+def test_flesch_reading_ease(lang: str, text: str, ease: float):
+    textstat.set_lang(lang)
+    score = textstat.flesch_reading_ease(text)
 
-    assert score == 66.17
-
-    textstat.set_lang("de_DE")
-    score = textstat.flesch_reading_ease(long_test)
-
-    assert score == 64.5
-
-    textstat.set_lang("es_ES")
-    score = textstat.flesch_reading_ease(long_test)
-
-    assert score == 86.76
-
-    textstat.set_lang("fr_FR")
-    score = textstat.flesch_reading_ease(long_test)
-
-    assert score == 81.73
-
-    textstat.set_lang("it_IT")
-    score = textstat.flesch_reading_ease(long_test)
-
-    assert score == 91.57
-
-    textstat.set_lang("nl_NL")
-    score = textstat.flesch_reading_ease(long_test)
-
-    assert score == 63.27
-
-    textstat.set_lang("ru_RU")
-    score = textstat.flesch_reading_ease(long_test)
-
-    assert score == 118.27
+    assert score == ease
 
 
 def test_flesch_kincaid_grade():

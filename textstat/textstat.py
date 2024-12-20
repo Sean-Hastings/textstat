@@ -25,7 +25,7 @@ langs = {
         # Fernandez Huerta Readability Formula
         "fre_base": 206.84,
         "fre_sentence_length": 1.02,
-        "fre_syll_per_word": 0.6,
+        "fre_syll_per_word": 60.0,
     },
     "fr": {
         "fre_base": 207,
@@ -36,7 +36,7 @@ langs = {
         # Flesch-Vacca
         "fre_base": 217,
         "fre_sentence_length": 1.3,
-        "fre_syll_per_word": 0.6,
+        "fre_syll_per_word": 60.0,
     },
     "nl": {
         # Flesch-Douma
@@ -677,8 +677,6 @@ class textstatistics:
 
     @lru_cache(maxsize=128)
     def flesch_reading_ease(self, text: str) -> float:
-        s_interval = 100 if self.__get_lang_root() in ["es", "it"] else None
-
         flesch = (
             self.__get_lang_cfg("fre_base")
             - float(
@@ -687,7 +685,7 @@ class textstatistics:
             )
             - float(
                 self.__get_lang_cfg("fre_syll_per_word")
-                * self.avg_syllables_per_word(text, s_interval)
+                * self.avg_syllables_per_word(text)
             )
         )
         return self._legacy_round(flesch, 2)
